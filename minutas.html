@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seguimiento a Minutas</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<!---------------------------------------------------------------------------------------------------------->
+
+<body>
+  <header id="header">
+    <div>
+      <img src="/img/logo.png" alt="logo" id="logo">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="/">Inicio</a></li>
+      </ul>
+    </nav>
+  </header>
+
+<!---------------------------------------------------------------------------------------------------------->
+
+  <main class="main-tabla">
+    <h1>Minutas Registradas</h1>
+
+    <div class="contenedorFiltros">
+      <div class="filtros">
+        <label for="filtroProyecto">Filtrar por proyecto:</label>
+        <select id="filtroProyecto">
+          <option value="">Todos los proyectos</option>
+        </select>
+      </div>
+
+      <div class="filtros">
+        <label for="filtroEstado">Filtrar por estado:</label>
+        <select id="filtroEstado">
+          <option value="">Todos los estados</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="atrasada">Atrasada</option>
+          <option value="completada">Completada</option>
+          <option value="aplazada">Aplazada</option>
+        </select>
+      </div>
+
+      <div class="filtros">
+        <label for="filtroResponsable">Filtrar por responsable:</label>
+        <select id="filtroResponsable">
+          <option value="">Todos los responsables</option>
+        </select>
+      </div>
+
+      <div class="filtros">
+        <label for="filtroSemana">Filtrar por semana:</label>
+        <select id="filtroSemana">
+          <option value="">Todas las semanas</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="contenedor-accion">
+      <button type="button" id="descargar" class="btn">Descargar</button>
+    </div>
+
+    <div class="tabla">
+      <table>
+
+        <thead>
+          <tr>
+            <th>Proyecto</th>
+            <th>Responsable</th>
+            <th>Semana</th>
+            <th>Fecha límite</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Comentario</th>
+          </tr>
+        </thead>
+
+        <tbody class="cuerpoTabla">
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+<!---------------------------------------------------------------------------------------------------------->
+
+  <footer id="footer">
+    <p>Aplicación para el control de minutas MODISA ®</p>
+    <p>Esta aplicación web está diseñada exclusivamente para controlar y asegurar el cumplimiento de los acuerdos de las reuniones. Permite capturar rápidamente los datos de la reunión, los temas tratados y asignar tareas específicas con responsables y fechas límite.</p>
+  </footer>
+
+<!---------------------------------------------------------------------------------------------------------->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="/app-tabla.js"></script>
+
+</body>
+</html>
+

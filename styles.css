@@ -1,0 +1,281 @@
+:root {
+  --primary-color: #06121E;
+  --accent-color: #3b82f6;
+  --bg-light: #f8fafc;
+  --bg-hover: #f1f5f9;
+  --border-color: #cbd5e1;
+  --text-dark: #334155;
+  --text-muted: #4a5568;
+  --dark-text: #000000;
+  --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body{ /* Selecciona el elemento <body> de la página */
+  margin: 0; /* Elimina el margen exterior por defecto del navegador */
+  padding: 0; /* Elimina el relleno interior por defecto del navegador */
+  display: flex; /* Activa el modelo de diseño flexible para el cuerpo de la página */
+  flex-direction: column; /* Coloca los elementos del cuerpo en columna, uno debajo de otro */
+  min-height: 100vh; /* Asegura que el cuerpo tenga al menos la altura de la ventana del navegador */
+  font-family: var(--font-main);
+}
+
+input, select, button { /* Selecciona los elementos de formulario para aplicar estilos */
+  font-family: inherit; /* Asegura que los elementos de formulario usen la misma fuente que el cuerpo de la página */
+}
+
+header{ /* Selecciona el elemento <header> para el encabezado de la página */
+  background-color: var(--primary-color); /* Fija el color de fondo del encabezado */
+  padding: 10px 40px; /* Agrega espacio interno: 10px arriba y abajo, 40px a los lados */
+  display: flex; /* Activa el modelo de diseño flexible para el contenido del header */
+  flex-direction: column; /* Coloca los elementos del header en columna, uno debajo de otro */
+  align-items: center; /* Centra horizontalmente los elementos dentro del header */
+  gap: 20px; /* Espacio de 20px entre los elementos hijos del header */
+}
+
+@media (min-width:768px){
+  header {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+header img{ /* Selecciona la imagen dentro del header */
+  height: 60px; /* Establece la altura fija de la imagen */
+  width: auto; /* Ajusta el ancho automáticamente para mantener la proporción */
+  object-fit: contain; /* Escala la imagen para que quepa sin recortarse */
+  margin: 0; /* Elimina cualquier margen exterior en la imagen */
+}
+
+header nav ul{ /* Selecciona la lista de navegación dentro del header */
+  list-style: none; /* Elimina los puntos de viñeta predeterminados de la lista */
+  display: flex; /* Coloca los ítems de la lista en una fila */
+  padding: 0; /* Elimina el relleno interno de la lista */
+  margin: 0; /* Elimina el margen externo de la lista */
+}
+
+header nav ul li a{ /* Selecciona los enlaces dentro de los elementos de lista del header */
+  color: var(--bg-light); /* Pinta el texto del enlace de color blanco */
+  text-decoration: none; /* Quita el subrayado de los enlaces */
+  font-size: 12px; /* Define un tamaño de fuente pequeño para los enlaces */
+  background-color: var(--text-muted); /* Pone un fondo gris semi-transparente al enlace */
+  padding: 8px 16px; /* Agrega relleno dentro del enlace para hacerlo más ancho */
+  border-radius: 4px; /* Redondea ligeramente las esquinas del enlace */
+  display: inline-block; /* Permite aplicar tamaño y padding correctamente */
+  transition: background-color 0.2s ease; /* Suaviza el cambio de color de fondo al pasar el cursor */
+}
+
+header nav ul li a:hover{ /* Selección para el estado hover (cuando el cursor está sobre el enlace) */
+  background-color: var(--accent-color); /* Cambia el fondo del enlace al pasar el cursor */
+}
+
+/*---------------------------------------------------------------------------------------------------------------*/
+.index_main{
+  max-width: 600px; /* Limita el ancho máximo del contenido principal a 600px */
+  margin: 40px auto;
+  padding: 0 20px; /* Agrega un relleno horizontal de 20px para evitar que el texto toque los bordes del contenedor */
+}
+
+.index_main h1{ /* Selecciona los encabezados de nivel 1 dentro del main */
+  font-size: 24px; /* Define un tamaño de fuente grande para los encabezados */
+  margin-bottom: 20px; /* Agrega un margen inferior para separar el encabezado del contenido siguiente */
+}
+
+.index_main form{
+  display: flex; /* Activa el modelo de diseño flexible para el formulario */
+  flex-direction: column; /* Coloca los elementos del formulario en columna, uno debajo de otro */
+  gap: 10px; /* Espacio de 10px entre los elementos del formulario */
+}
+
+.contenedor-formulario{
+  font-size: 14px; /* Define un tamaño de fuente mediano para los grupos de formulario */
+}
+
+.contenedor-formulario input, .contenedor-formulario select, .contenedor-formulario textarea{
+  width: 100%; /* Hace que los campos de entrada ocupen todo el ancho del contenedor */
+  padding: 8px; /* Agrega un relleno interno de 8px para mejorar la apariencia de los campos */
+  border: 1px solid  var(--border-color); /* Agrega un borde gris claro a los campos de entrada */
+  border-radius: 4px; /* Redondea ligeramente las esquinas de los campos de entrada */
+  box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho total del elemento */
+  transition: border-color 0.2s ease; /* Suaviza el cambio de color del borde al interactuar con los campos */
+}
+
+.contenedor-formulario input:focus, .contenedor-formulario select:focus, .contenedor-formulario textarea:focus{
+  outline: none; /* Elimina el contorno predeterminado al enfocar los campos */
+  border-color: var(--border-color); /* Cambia el color del borde al enfocar los campos */
+  background-color: var(--bg-light); /* Cambia el fondo de los campos al enfocar para mejorar la visibilidad */ 
+}
+
+.contenedor-botones{
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.btn{
+  padding: 5px 30px; /* Agrega un relleno interno de 10px arriba y abajo, 20px a los lados para el botón */
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  display: inline-block;
+  cursor: pointer;
+  margin-top: 5px;
+  transition: all 0.2s ease;
+}
+
+#agregar ,#descargar{
+  background-color: var(--bg-hover);
+  color: var(--primary-color);
+  border: 1px solid var(--border-color);
+}
+
+#agregar:hover , #descargar:hover{
+  background-color: var(--border-color);
+}
+
+#descargar {
+  margin-bottom: 20px; /* Esto empuja la tabla hacia abajo y le da aire al diseño */
+}
+
+#guardar{
+  background-color: var(--border-color);
+  color: var(--bg-light);
+}
+
+#guardar:hover{
+  background-color: var(--accent-color);
+}
+
+.contenedorFiltros{
+  display: flex; /* Activa el modelo de diseño flexible para el contenedor de filtros */
+  flex-direction: row; /* Coloca los filtros en una fila, uno al lado del otro */
+  gap: 20px; /* Espacio de 20px entre los filtros */
+  flex-wrap: wrap; /* Permite que los filtros se ajusten a la siguiente línea si no caben en una sola fila */
+  margin-bottom: 30px; /* Agrega un margen inferior para separar los filtros del contenido siguiente */
+}
+
+.filtros{
+  margin-bottom: 5px; /* Agrega un margen inferior para separar los filtros del contenido siguiente */
+  display: flex; /* Activa el modelo de diseño flexible para los contenedores de filtro */
+  flex-direction: column; /* Coloca los elementos del filtro en columna, uno debajo de otro */
+  gap: 5px; /* Espacio de 5px entre los elementos del filtro */
+  width: auto; /* Permite que los contenedores de filtro ocupen solo el ancho necesario para su contenido */
+  max-width: 300px; /* Limita el ancho máximo de los contenedores de filtro para evitar que sean demasiado anchos en pantallas grandes */
+  min-width: 200px; /* Establece un ancho mínimo para los contenedores de filtro para asegurar que sean lo suficientemente grandes para su contenido */
+}
+
+.filtros label { /* Selecciona las etiquetas dentro de los contenedores de filtro para aplicar estilos */
+  font-size: 13px; /* Define un tamaño de fuente pequeño para las etiquetas de los filtros */
+  font-weight: bold; /* Hace que el texto de las etiquetas de los filtros sea negrita para destacarlas */
+  color: var(--text-muted); /* Color gris oscuro para las etiquetas */
+}
+
+.filtros select { /* Selecciona los elementos de selección dentro de los contenedores de filtro para aplicar estilos */
+  padding: 8px 12px; /* Agrega un relleno interno de 8px arriba y abajo, 12px a los lados para los campos de selección */
+  border: 1px solid var(--border-color); /* Agrega un borde gris claro a los campos de selección */
+  border-radius: 6px; /* Redondea ligeramente las esquinas de los campos de selección */
+  background-color: var(--bg-light); /* Pone un fondo blanco a los campos de selección para mejorar la visibilidad */
+  color: var(--dark-text); /* Color gris oscuro para el texto de los campos de selección */
+  font-size: 13px; /* Define un tamaño de fuente pequeño para los campos de selección */
+  cursor: pointer; /* Cambia el cursor a un puntero al pasar sobre los campos de selección para indicar que son interactivos */
+  outline: none; /* Elimina el contorno predeterminado al enfocar los campos de selección */
+  transition: border-color 0.2s; /* Suaviza el cambio de color del borde al interactuar con los campos de selección */
+}
+
+.filtros select:focus { /* Selecciona los campos de selección cuando están enfocados para aplicar estilos */
+  border-color: var(--accent-color); /* Destello azul al seleccionar */
+}
+
+.main-tabla{ /* Selecciona el elemento <main> con la clase "main-tabla" para el contenido principal de la página de minutas */
+  margin: 40px auto; /* Centra el contenido principal horizontalmente y agrega un margen vertical de 40px */
+  max-width: 1300px; /* Limita el ancho máximo del contenido principal a 600px */
+  padding: 0 20px; /* Agrega un relleno horizontal de 20px para evitar que el texto toque los bordes del contenedor */
+}
+
+.main-tabla h1{ /* Selecciona los encabezados de nivel 1 dentro del main con clase "main-tabla" */
+  font-size: 26px; /* Define un tamaño de fuente grande para los encabezados */
+  color: var(--primary-color); /* Pinta el texto del encabezado de un color oscuro para mejorar la legibilidad */
+  margin-bottom: 25px; /* Agrega un margen inferior para separar el encabezado del contenido siguiente */
+}
+
+.tabla{
+  max-width: 1300px; /* Limita el ancho máximo del contenedor de la tabla a 600px */
+  margin: 20px auto; /* Centra el contenedor de la tabla horizontalmente y agrega un margen vertical de 20px */
+  overflow-x: auto; /* Agrega una barra de desplazamiento horizontal si la tabla es más ancha que el contenedor */
+}
+
+.tabla table{
+  border-collapse: collapse; /* Colapsa los bordes de la tabla para eliminar el espacio entre ellos */
+  width: 100%; /* Hace que la tabla ocupe todo el ancho del contenedor */
+  font-size: 13px; /* Define un tamaño de fuente mediano para el texto de la tabla */
+}
+
+.tabla th{
+  background-color: var(--primary-color);
+  color: var(--bg-light);
+  padding: 14px 16px; /* Agrega un relleno interno de 14px arriba y abajo, 16px a los lados para las celdas de encabezado */
+  letter-spacing: 0.6px; /* Agrega un poco de espacio entre las letras en los encabezados para mejorar la legibilidad */
+  border: 1px solid var(--primary-color);
+  text-align: left; /* Alineación limpia a la izquierda */
+  font-weight: 600;
+}
+
+.tabla td{
+  text-align: left;
+  border-bottom: 1px solid var(--bg-hover);
+  padding: 12px 16px; /* Agrega un relleno interno de 10px para mejorar la apariencia de las celdas de datos */
+  color: var(--text-dark);
+}
+
+.tabla tbody tr:nth-child(even) { /* Selecciona las filas pares dentro del cuerpo de la tabla para aplicar estilos */
+  background-color: var(--bg-light); /* Pinta el fondo de las filas pares con un color gris muy claro para mejorar la legibilidad */
+}
+
+.tabla tbody tr:hover { /* Selecciona las filas dentro del cuerpo de la tabla cuando el cursor está sobre ellas para aplicar estilos */
+  background-color: var(--bg-hover);
+}
+
+.selector-estatus {
+  padding: 6px 10px;
+  border: 1px solid  var(--border-color);
+  border-radius: 4px;
+  font-size: 12px;
+  background-color: var(--bg-light);
+  cursor: pointer;
+  width: 100%;
+  max-width: 140px;
+}
+
+.input-comentario {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.input-comentario:focus {
+  outline: none;
+  border-color:  var(--accent-color);
+}
+
+/*---------------------------------------------------------------------------------------------------------------*/
+footer{
+ background-color: var(--primary-color); /* Fija el color de fondo del pie de página */
+ color: var(--bg-light); /* Pinta el texto del pie de página de color blanco */
+ padding: 20px 20px; /* Agrega espacio interno: 20px arriba y abajo, 40px a los lados */
+ margin-top: auto; /* Agrega un margen superior para separar el pie de página del contenido anterior */
+ display: flex; /* Activa el modelo de diseño flexible para el contenido del footer */
+ flex-direction: column; /* Coloca los elementos del footer en columna, uno debajo de otro */
+ align-items: center; /* Centra horizontalmente los elementos dentro del footer */
+ justify-content: center; /* Centra verticalmente los elementos dentro del footer */
+ text-align: center; /* Centra el texto dentro del footer */
+ gap: 5px; /* Espacio de 10px entre los elementos hijos del footer */
+ font-size: 10px; /* Define un tamaño de fuente pequeño para el texto del footer */
+}
+
+footer p{ /* Selecciona los párrafos dentro del footer */
+ margin: 0; /* Elimina el margen exterior de los párrafos */
+}
