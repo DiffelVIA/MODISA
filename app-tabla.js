@@ -189,7 +189,7 @@ function asignarEventosInteractivos() {
   });
 
   document.querySelectorAll('.input-comentario').forEach((input) => {
-    input.addEventListener('change', (e) => {
+    input.addEventListener('blur', (e) => {
       const idActividad = e.target.getAttribute('data-id');
       const nuevoComentario = e.target.value;
 
@@ -211,11 +211,13 @@ async function guardarEnNubeUrgente(actividadActualizada) {
       concentradoMinutas[indice] = {...actividadActualizada};
     }
 
+    const numeroSemana = Number(actividadActualizada.semana);
+
     const objetoFormateado = {
       id: actividadActualizada.id,
       proyecto: actividadActualizada.proyecto,
       responsable: actividadActualizada.responsable,
-      semana: Number(actividadActualizada.semana),
+      semana: isNaN(numeroSemana) ? 1 : numeroSemana,
       fecha: actividadActualizada.fecha,
       descripcion: actividadActualizada.descripcion,
       estado: actividadActualizada.estado,
@@ -240,8 +242,6 @@ async function guardarEnNubeUrgente(actividadActualizada) {
 
     const resultado = await respuesta.json();
     console.log('Sincronización exitosa con Aiven:', resultado);
-
-    aplicarFiltros();
     
   } catch (error) {
     console.error('Error al guardar cambios en la nube:', error);
