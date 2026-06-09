@@ -58,18 +58,23 @@ app.post('/api/minutas', async (req, res) => {
 
       const fechaLimpia = item.fecha ? item.fecha.split('T')[0] : new Date().toISOString().split('T')[0];
       
-      const fechaHoy = new Date();
+      let semanaAInsertar;
 
-      const primeraFechaAnio = new Date(fechaHoy.getFullYear(), 0, 1);
-      const diasPasados = Math.floor((fechaHoy - primeraFechaAnio) / (1000 * 60 * 60 * 24));
-      
-      const semanaRegistroHoy = Math.ceil((diasPasados + primeraFechaAnio.getDay() + 1) / 7);
-      
+      if (item.semana !== undefined && item.semana !== null && !isNaN(Number(item.semana)) && Number(item.semana) !== 0) {
+        semanaAInsertar = Number(item.semana);
+      } else {
+        const fechaHoy = new Date();
+
+        const primeraFechaAnio = new Date(fechaHoy.getFullYear(), 0, 1);
+        const diasPasados = Math.floor((fechaHoy - primeraFechaAnio) / (1000 * 60 * 60 * 24));
+        semanaAInsertar = Math.ceil((diasPasados + primeraFechaAnio.getDay() + 1) / 7);
+      }
+
       return pool.query(query, [
         item.id,
         item.proyecto,
         item.responsable,
-        semanaRegistroHoy,
+        semanaAInsertar,
         fechaLimpia,
         item.descripcion,
         item.estado,
