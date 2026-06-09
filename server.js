@@ -85,7 +85,7 @@ app.post('/api/minutas', async (req, res) => {
   }
 });
 
-app.get('/api/empleados', async (req, res) => {
+app.get('/api/employees', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT name, last_name FROM employees ORDER BY name ASC;');
     res.json(rows);
@@ -95,7 +95,7 @@ app.get('/api/empleados', async (req, res) => {
   }
 });
 
-app.get('/api/proyectos', async (req, res) => {
+app.get('/api/projects', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT project_name FROM projects WHERE project_name IS NOT NULL ORDER BY project_name ASC;');
     res.json(rows);

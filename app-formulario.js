@@ -11,7 +11,7 @@ async function cargarResponsablesDesdeNube() {
   if (!selectResponsable) return;
 
   try {
-    const respuesta = await fetch(  'https://modisa.onrender.com/api/empleados');
+    const respuesta = await fetch(  'https://modisa.onrender.com/api/employees');
     if (!respuesta.ok) throw new Error('Error al traer empleados');
 
     const empleados = await respuesta.json();
@@ -35,7 +35,7 @@ async function cargarProyectosDesdeNube() {
   if (!selectProyecto) return;
 
   try { 
-    const respuesta = await fetch('https://modisa.onrender.com/api/proyectos');
+    const respuesta = await fetch('https://modisa.onrender.com/api/projects');
     if (!respuesta.ok) throw new Error('Error al obtener los proyectos');
 
     const proyectos = await respuesta.json();
