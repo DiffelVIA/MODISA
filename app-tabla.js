@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function cargarActividades() {
   try {
-    const respuesta = await fetch('http://localhost:3000/api/minutas');
+    const respuesta = await fetch('https://modisa.onrender.com/api/minutas');
     
     if (!respuesta.ok) {
       throw new Error('Error al conectar con el servidor');
@@ -204,7 +204,7 @@ function asignarEventosInteractivos() {
 
 async function guardarEnNubeUrgente(actividadActualizada) {
   try {
-    const url = 'http://localhost:3000/api/minutas';
+    const url = 'https://modisa.onrender.com/api/minutas';
 
     const indice = concentradoMinutas.findIndex(item => item.id === actividadActualizada.id);
     if (indice !== -1) {
