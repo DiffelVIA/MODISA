@@ -26,7 +26,7 @@ const pool = mysql.createPool({
 
 app.get('/api/minutas', async(req, res) => {
   try{
-    const [filas] = await pool.query('SELECT * FROM v_minutas');
+    const [filas] = await pool.query('SELECT * FROM minutas');
     res.json(filas);
   } catch (error) {
     console.error('Error al obtener datos de Aiven:', error);
