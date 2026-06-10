@@ -24,22 +24,36 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-app.get('/api/minutas', async(req, res) => {
-  try{
-    const minutaAtrasada = new Date().toString().split('T')[0];
+app.get('/api/minutas', async (req, res) => {
+  try {
+    // 1. Obtenemos la fecha local actual en formato YYYY-MM-DD de manera segura
+    const fechaActual = new Date();
+    const anio = fechaActual.getFullYear();
+    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+    const dia = String(fechaActual.getDate()).padStart(2, '0');
+    const hoyFormateado = `${anio}-${mes}-${dia}`;
+
+    console.log("Revisando actividades vencidas para la fecha local:", hoyFormateado);
+
     await pool.query(`
       UPDATE minutas 
       SET estado = 'atrasada' 
-      WHERE fecha < ? AND estado != 'completada'
-    `, [minutaAtrasada]);
+      WHERE fecha < ? AND estado != 'completada' AND estado != 'atrasada'
+    `, [hoyFormateado]);
 
-    const [filas] = await pool.query('SELECT * FROM minutas');
+    // 3. Traemos todas las minutas ordenadas para mostrarlas en la tabla
+    const [filas] = await pool.query('SELECT * FROM minutas ORDER BY fecha ASC;');
+    
+    // Enviamos la respuesta exitosa al frontend
     res.json(filas);
+
   } catch (error) {
-    console.error('Error al obtener datos de Aiven:', error);
-    res.status(500).json({ error: error.message });
+    // Si algo falla, esto saldrá en los logs de Render para decirnos exactamente qué palabra no le gustó a MySQL
+    console.error('Error crítico dentro de GET /api/minutas:', error);
+    res.status(500).json({ error: 'Error interno del servidor al procesar minutas', detalle: error.message });
   }
 });
+
 
 // Endpoint para traer las minutas desde Aiven MySQL
 app.post('/api/minutas', async (req, res) => {
