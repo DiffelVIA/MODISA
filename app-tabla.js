@@ -63,50 +63,49 @@ async function cargarActividades() {
 }
 
 function filtroOpciones(datos){
-  if (!datos || datos.length ===0) return;
+  if (!datos || datos.length === 0) return;
 
   const proyectosUnicos = [...new Set(datos.map(item => item.proyecto).filter(Boolean))];
   const responsablesUnicos = [...new Set(datos.map(item => item.responsable).filter(Boolean))];
   const semanasUnicas = [...new Set(datos.map(item => item.semana))].sort((a,b) => Number(a) - Number(b));
 
   if (filtroProyecto) {
-    filtroProyecto.innerHTML = '<option value="todos">Todos los proyectos</option>';
+    filtroProyecto.multiple = true;
+    filtroProyecto.size = 3;
+    filtroProyecto.innerHTML = '';
     proyectosUnicos.forEach(p => {
-    filtroProyecto.innerHTML += `<option value="${p}">${p}</option>`;
+      filtroProyecto.innerHTML += `<option value="${p}">${p}</option>`;
     });
-    filtroProyecto.value = 'todos';
   }
-
-  proyectosUnicos.sort();
-  responsablesUnicos.sort();
-  semanasUnicas.sort((a, b) => a - b);
 
   if (filtroEstado) {
+    filtroEstado.multiple = true;
+    filtroEstado.size = 4;
     filtroEstado.innerHTML = `
-    <option value="todos">Todos los estados</option>
-    <option value="pendiente">⏳ Pendiente</option>
-    <option value="atrasada">🚨 Atrasada</option>
-    <option value="completada">✅ Completada</option>
-    <option value="aplazada">📅 Aplazada</option>
+      <option value="todos">Todos los estados</option>
+      <option value="pendiente">⏳ Pendiente</option>
+      <option value="atrasada">🚨 Atrasada</option>
+      <option value="completada">✅ Completada</option>
+      <option value="aplazada">📅 Aplazada</option>
     `;
-    filtroEstado.value = 'todos';
   }
-  
 
   if (filtroResponsable) {
-    filtroResponsable.innerHTML = '<option value="todos">Todos los responsables</option>';
+    filtroResponsable.multiple = true;
+    filtroResponsable.size = 3;
+    filtroResponsable.innerHTML = '';
     responsablesUnicos.forEach(r =>{
       filtroResponsable.innerHTML += `<option value="${r}">${r}</option>`;
     });
-    filtroResponsable.value = 'todos';
   }
 
   if (filtroSemana) {
-    filtroSemana.innerHTML = '<option value="todas">Todas las semanas</option>';
-    semanasUnicas.forEach(s =>{
+    filtroSemana.multiple = true;
+    filtroSemana.size = 3;
+    filtroSemana.innerHTML = '';
+    semanasUnicas.forEach(s => {
       filtroSemana.innerHTML += `<option value="${s}">Semana ${s}</option>`;
     });
-    filtroSemana.value = 'todas';
   }
 }
 
@@ -149,17 +148,22 @@ function renderizarTabla(actividadesAFiltrar) {
 }
 
 function aplicarFiltros() {
-  const pSel = filtroProyecto ? filtroProyecto.value : 'todos';
-  const eSel = filtroEstado ? filtroEstado.value : 'todos';
-  const rSel = filtroResponsable ? filtroResponsable.value : 'todos';
-  const sSel = filtroSemana ? filtroSemana.value : 'todas';
+
+  const valoresSeleccionados = (selectElement) => {
+    if (!selectElement) return [];
+    return Array.from(selectElement.selectedOptions).map(option => option.value);
+  };
+
+  const pSel = valoresSeleccionados(filtroProyecto);
+  const eSel = valoresSeleccionados(filtroEstado);
+  const rSel = valoresSeleccionados(filtroResponsable);
+  const sSel = valoresSeleccionados(filtroSemana);
 
   const resultadoFiltrado = concentradoMinutas.filter((actividad) => {
-    const cumpleProyecto = (pSel === 'todos' || pSel === '' || actividad.proyecto === pSel);
-    const cumpleEstado = (eSel === 'todos' || eSel === '' || eSel === 'todos los estados' || actividad.estado === eSel.toLowerCase().trim());
-    const cumpleResponsable = (rSel === 'todos' || rSel === '' || actividad.responsable === rSel);
-    const cumpleSemana = (sSel === 'todas' || sSel === '' || String(actividad.semana).trim() === String(sSel).trim());
-
+    const cumpleProyecto = pSel.length === 0 || pSel.includes(actividad.proyecto);
+    const cumpleEstado = eSel.length === 0 || eSel.includes(actividad.estado.toLowerCase().trim());
+    const cumpleResponsable = rSel.length === 0 || rSel.includes(actividad.responsable);
+    const cumpleSemana = sSel.length === 0 || sSel.includes(String(actividad.semana).trim());
     return cumpleProyecto && cumpleEstado && cumpleResponsable && cumpleSemana;
   });
 
