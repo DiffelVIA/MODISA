@@ -187,6 +187,27 @@ header nav ul li a:hover{ /* Selección para el estado hover (cuando el cursor e
   border-color: var(--accent-color); /* Destello azul al seleccionar */
 }
 
+/* Estilos exclusivos para cuando el select tiene la propiedad multiple activa */
+.filtros select[multiple] {
+  height: auto;          /* Quita cualquier restricción de altura */
+  min-height: 100px;     /* Le da una altura fija cómoda para ver varias opciones */
+  padding: 6px;          /* Ajusta el relleno interno */
+  background-image: none;/* Elimina la flechita clásica de despliegue */
+  overflow-y: auto;      /* Agrega una barra de desplazamiento interna si hay muchas opciones */
+}
+
+/* Estilo para mejorar cómo se ven las opciones adentro en Mac y Windows */
+.filtros select[multiple] option {
+  padding: 6px 10px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+
+/* Cambia el color cuando pasas el mouse por encima de una opción */
+.filtros select[multiple] option:hover {
+  background-color: rgba(2, 132, 199, 0.1);
+}
+
 .main-tabla{ /* Selecciona el elemento <main> con la clase "main-tabla" para el contenido principal de la página de minutas */
   margin: 40px auto; /* Centra el contenido principal horizontalmente y agrega un margen vertical de 40px */
   max-width: 1300px; /* Limita el ancho máximo del contenido principal a 600px */
