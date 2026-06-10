@@ -182,7 +182,7 @@ function asignarEventosInteractivos() {
 
       const actividad = concentradoMinutas.find(item => item.id === idActividad);
       if (actividad) {
-        if (nuevoEstado === 'Aplazada') {
+        if (nuevoEstado === 'aplazada') {
           nuevaFechaEstado(actividad, e.target);
         } else {
         actividad.estado = nuevoEstado;
@@ -440,7 +440,7 @@ function nuevaFechaEstado(actividad, selectElement) {
       return;
     }
 
-    actividad.estado = 'Aplazada';
+    actividad.estado = 'aplazada';
     actividad.fecha = nuevaFecha;
 
     document.body.removeChild(modalBg);
