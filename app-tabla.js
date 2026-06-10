@@ -182,8 +182,13 @@ function asignarEventosInteractivos() {
 
       const actividad = concentradoMinutas.find(item => item.id === idActividad);
       if (actividad) {
+        if (nuevoEstado === 'Aplazada') {
+          nuevaFechaEstado(actividad, e.target);
+        } else {
         actividad.estado = nuevoEstado;
-        guardarEnNubeUrgente(actividad);
+        await guardarEnNubeUrgente(actividad);
+        aplicarFiltros();
+        }
       }
     });
   });
@@ -375,4 +380,73 @@ function MinutasPDF() {
   const nombreArchivo = `Reporte_Minutas_${nombreProyecto.replace(/\s+/g, '_')}.pdf`
   nombreLimpio = nombreLimpio.replace(/ /g, 'i').replace(/i/g, 'I');
   doc.save(nombreArchivo);
+}
+
+function nuevaFechaEstado(actividad, selectElement) {
+  const modalBg = document.createElement('div');
+  modalBg.style.position = 'fixed';
+  modalBg.style.to = '0';
+  modalBg.style.left = '0';
+  modalBg.style.width = '100vw';
+  modalBg.style.height = '100vh';
+  modalBg.style.backgroundColor = 'rgba(15, 23, 42, 0.6)';
+  modalBg.style.display = 'flex';
+  modalBg.style.justifyContent = 'center';
+  modalBg.style.alignItems = 'center';
+  modalBg.style.zIndex = '9999';
+
+  const modalBox = document.createElement('div');
+  modalBox.style.backgroundColor = '#ffffff';
+  modalBox.style.padding = '24px';
+  modalBox.style.borderRadius = '8px';
+  modalBox.style.boxShadow = '0 10px 15px -3px rgba(0,0,0,0.1)';
+  modalBox.style.width = '90%';
+  modalBox.style.maxWidth = '400px';
+  modalBox.style.fontFamily = 'system-ui, -apple-system, sans-serif';
+
+  modalBgBox.innerHTML = `
+    <h3 style="margin-top: 0; margin-bottom: 10px; color: #0f172a; font-size: 18px; display: flex; align-items: center; gap: 8px;">📅 Aplazar Actividad</h3>
+    <p style="color: #475569; font-size: 14px; margin-bottom: 20px; line-height: 1.5;">
+      Para cambiar el estatus a <strong>Aplazada</strong>, es obligatorio establecer una nueva fecha de entrega.
+    </p>
+    
+    <label style="display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px;">Nueva fecha límite:</label>
+    <input type="date" id="modalFechaInput" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; margin-bottom: 24px; font-size: 14px; outline: none;">
+    
+    <div style="display: flex; justify-content: flex-end; gap: 12px;">
+      <button id="btnModalCancelar" style="padding: 10px 16px; background-color: #f1f5f9; color: #334155; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: background 0.2s;">Cancelar</button>
+      <button id="btnModalGuardar" style="padding: 10px 16px; background-color: #0284c7; color: #ffffff; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: background 0.2s;">Confirmar Cambio</button>
+    </div>
+  `;
+
+  modalBg.appendChild(modalBox);
+  document.body.appendChild(modalBg);
+
+  const fechaIn = modalBox.querySelector('#modalFechaInput');
+  if (actividad.fecha) {
+    fechaIn.value = actividad.fecha.split('T')[0];
+  }
+
+  modalBox.querySelector('#btnModalCancelar').addEventListener('click', () => {
+    selectElement.value = actividad.estado;
+    document.body.removeChild(modalBg);
+  });
+
+  modalBox.querySelector('#btnModalGuardar').addEventListener('click', async () => {
+    const nuevaFecha = fechaIn.value;
+
+    if (!nuevaFecha) {
+      alert('⚠️ Debes seleccionar una fecha para poder aplazar la actividad.');
+      return;
+    }
+
+    actividad.estado = 'Aplazada';
+    actividad.fecha = nuevaFecha;
+
+    document.body.removeChild(modalBg);
+
+    await guardarEnNubeUrgente(actividad);
+
+    aplicarFiltros();
+  });
 }
