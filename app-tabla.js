@@ -65,24 +65,25 @@ async function cargarActividades() {
 function filtroOpciones(datos){
   if (!datos || datos.length === 0) return;
 
-  const proyectosUnicos = [...new Set(datos.map(item => item.proyecto).filter(Boolean))];
-  const responsablesUnicos = [...new Set(datos.map(item => item.responsable).filter(Boolean))];
+  const proyectosUnicos = [...new Set(datos.map(item => item.proyecto).filter(Boolean))].sort();
+  const responsablesUnicos = [...new Set(datos.map(item => item.responsable).filter(Boolean))].sort();
   const semanasUnicas = [...new Set(datos.map(item => item.semana))].sort((a,b) => Number(a) - Number(b));
 
+  // Filtro de Proyectos
   if (filtroProyecto) {
     filtroProyecto.multiple = true;
-    filtroProyecto.size = 3;
+    filtroProyecto.size = 3; // Muestra 3 filas visibles
     filtroProyecto.innerHTML = '';
     proyectosUnicos.forEach(p => {
       filtroProyecto.innerHTML += `<option value="${p}">${p}</option>`;
     });
   }
 
+  // Filtro de Estados
   if (filtroEstado) {
     filtroEstado.multiple = true;
-    filtroEstado.size = 4;
+    filtroEstado.size = 4; // Muestra los 4 estados de golpe
     filtroEstado.innerHTML = `
-      <option value="todos">Todos los estados</option>
       <option value="pendiente">⏳ Pendiente</option>
       <option value="atrasada">🚨 Atrasada</option>
       <option value="completada">✅ Completada</option>
@@ -90,6 +91,7 @@ function filtroOpciones(datos){
     `;
   }
 
+  // Filtro de Responsables
   if (filtroResponsable) {
     filtroResponsable.multiple = true;
     filtroResponsable.size = 3;
@@ -99,11 +101,12 @@ function filtroOpciones(datos){
     });
   }
 
+  // Filtro de Semanas
   if (filtroSemana) {
     filtroSemana.multiple = true;
     filtroSemana.size = 3;
     filtroSemana.innerHTML = '';
-    semanasUnicas.forEach(s => {
+    semanasUnicas.forEach(s =>{
       filtroSemana.innerHTML += `<option value="${s}">Semana ${s}</option>`;
     });
   }
@@ -147,23 +150,24 @@ function renderizarTabla(actividadesAFiltrar) {
   asignarEventosInteractivos();
 }
 
-function aplicarFiltros() {
 
-  const valoresSeleccionados = (selectElement) => {
+function aplicarFiltros() {
+  const obtenerValoresSeleccionados = (selectElement) => {
     if (!selectElement) return [];
     return Array.from(selectElement.selectedOptions).map(option => option.value);
   };
 
-  const pSel = valoresSeleccionados(filtroProyecto);
-  const eSel = valoresSeleccionados(filtroEstado);
-  const rSel = valoresSeleccionados(filtroResponsable);
-  const sSel = valoresSeleccionados(filtroSemana);
+  const proyectosSeleccionados = obtenerValoresSeleccionados(filtroProyecto);
+  const estadosSeleccionados = obtenerValoresSeleccionados(filtroEstado);
+  const responsablesSeleccionados = obtenerValoresSeleccionados(filtroResponsable);
+  const semanasSeleccionadas = obtenerValoresSeleccionados(filtroSemana);
 
   const resultadoFiltrado = concentradoMinutas.filter((actividad) => {
-    const cumpleProyecto = pSel.length === 0 || pSel.includes(actividad.proyecto);
-    const cumpleEstado = eSel.length === 0 || eSel.includes(actividad.estado.toLowerCase().trim());
-    const cumpleResponsable = rSel.length === 0 || rSel.includes(actividad.responsable);
-    const cumpleSemana = sSel.length === 0 || sSel.includes(String(actividad.semana).trim());
+    const cumpleProyecto = proyectosSeleccionados.length === 0 || proyectosSeleccionados.includes(actividad.proyecto);
+    const cumpleEstado = estadosSeleccionados.length === 0 || estadosSeleccionados.includes(actividad.estado.toLowerCase().trim());
+    const cumpleResponsable = responsablesSeleccionados.length === 0 || responsablesSeleccionados.includes(actividad.responsable);
+    const cumpleSemana = semanasSeleccionadas.length === 0 || semanasSeleccionadas.includes(String(actividad.semana).trim());
+
     return cumpleProyecto && cumpleEstado && cumpleResponsable && cumpleSemana;
   });
 
