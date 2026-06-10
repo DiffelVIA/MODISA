@@ -26,6 +26,13 @@ const pool = mysql.createPool({
 
 app.get('/api/minutas', async(req, res) => {
   try{
+    const minutaAtrasada = new Date().toString().split('T')[0];
+    await pool.query(`
+      UPDATE minutas 
+      SET estado = 'atrasada' 
+      WHERE fecha < ? AND estado != 'completada'
+    `, [minutaAtrasada]);
+
     const [filas] = await pool.query('SELECT * FROM minutas');
     res.json(filas);
   } catch (error) {
