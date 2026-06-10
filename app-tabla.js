@@ -176,7 +176,7 @@ function configurarFiltros() {
 
 function asignarEventosInteractivos() {
   document.querySelectorAll('.selector-estatus').forEach((select) => {
-    select.addEventListener('change', (e) => {
+    select.addEventListener('change', async (e) => {
       const idActividad = e.target.getAttribute('data-id');
       const nuevoEstado = e.target.value;
 
@@ -385,7 +385,7 @@ function MinutasPDF() {
 function nuevaFechaEstado(actividad, selectElement) {
   const modalBg = document.createElement('div');
   modalBg.style.position = 'fixed';
-  modalBg.style.to = '0';
+  modalBg.style.top = '0';
   modalBg.style.left = '0';
   modalBg.style.width = '100vw';
   modalBg.style.height = '100vh';
@@ -404,7 +404,7 @@ function nuevaFechaEstado(actividad, selectElement) {
   modalBox.style.maxWidth = '400px';
   modalBox.style.fontFamily = 'system-ui, -apple-system, sans-serif';
 
-  modalBgBox.innerHTML = `
+  modalBox.innerHTML = `
     <h3 style="margin-top: 0; margin-bottom: 10px; color: #0f172a; font-size: 18px; display: flex; align-items: center; gap: 8px;">📅 Aplazar Actividad</h3>
     <p style="color: #475569; font-size: 14px; margin-bottom: 20px; line-height: 1.5;">
       Para cambiar el estatus a <strong>Aplazada</strong>, es obligatorio establecer una nueva fecha de entrega.
