@@ -54,7 +54,7 @@ app.post('/api/minutas', async (req, res) => {
     `;
 
     const promesas = listaMinutas.map(item => {
-      const comentario = item.comentarioDirector || item.comentarioDirector || '';
+      const comentario = item.comentariodirector || item.comentarioDirector || '';
 
       const fechaLimpia = item.fecha ? item.fecha.split('T')[0] : new Date().toISOString().split('T')[0];
       
