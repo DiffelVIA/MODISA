@@ -1,17 +1,24 @@
 let concentradoMinutas = [];
 let actividadesFiltradas = [];
 
-const filtroProyecto = document.getElementById("filtroProyecto");
-const filtroEstado = document.getElementById("filtroEstado");
-const filtroResponsable = document.getElementById("filtroResponsable");
-const filtroSemana = document.getElementById("filtroSemana");
+let filtroProyecto;
+let filtroEstado;
+let filtroResponsable;
+let filtroSemana;
 
 let cuerpoTabla;
 
 document.addEventListener('DOMContentLoaded', () => {
   cuerpoTabla = document.querySelector('.cuerpoTabla');
+  filtroProyecto = document.getElementById("filtroProyecto");
+  filtroEstado = document.getElementById("filtroEstado");
+  filtroResponsable = document.getElementById("filtroResponsable");
+  filtroSemana = document.getElementById("filtroSemana");
+
+  if(!cuerpoTabla) return;
+
   cargarActividades();
-  configurarFiltros();
+  configurarDropdowns();
 
   const btnDescargar = document.getElementById("descargar");
   if (btnDescargar) {
@@ -37,9 +44,11 @@ async function cargarActividades() {
     } else {
       concentradoMinutas = datosCrudos.map(item => {
         const comentario = item.comentariodirector || item.comentarioDirector || '';
+        const avance = item.avance !== undefined && item.avance !== null ? Number(item.avance) : 0;
         return {
           id: item.id,
           proyecto: item.proyecto || 'Sin proyecto',
+          avance: avance,
           responsable: item.responsable || 'Sin responsable',
           semana: item.semana !== undefined && item.semana !== null ? String(item.semana) : '1',
           fecha: item.fecha || '',
@@ -65,51 +74,55 @@ async function cargarActividades() {
 function filtroOpciones(datos){
   if (!datos || datos.length === 0) return;
 
-  const proyectosUnicos = [...new Set(datos.map(item => item.proyecto).filter(Boolean))].sort();
-  const responsablesUnicos = [...new Set(datos.map(item => item.responsable).filter(Boolean))].sort();
+  const proyectosUnicos = [...new Set(datos.map(item => item.proyecto))].sort();
+  const responsablesUnicos = [...new Set(datos.map(item => item.responsable))].sort();
   const semanasUnicas = [...new Set(datos.map(item => item.semana))].sort((a,b) => Number(a) - Number(b));
 
   // Filtro de Proyectos
   if (filtroProyecto) {
-    filtroProyecto.multiple = true;
-    filtroProyecto.size = 3; // Muestra 3 filas visibles
-    filtroProyecto.innerHTML = '';
-    proyectosUnicos.forEach(p => {
-      filtroProyecto.innerHTML += `<option value="${p}">${p}</option>`;
-    });
+    filtroProyecto.innerHTML = proyectosUnicos.map(p => `
+      <label class="opcion-filtro">
+        <input type="checkbox" value="${p}" class="chk-proyecto"> ${p}
+      </label>
+    `).join('');
   }
 
   // Filtro de Estados
   if (filtroEstado) {
-    filtroEstado.multiple = true;
-    filtroEstado.size = 4; // Muestra los 4 estados de golpe
-    filtroEstado.innerHTML = `
-      <option value="pendiente">⏳ Pendiente</option>
-      <option value="atrasada">🚨 Atrasada</option>
-      <option value="completada">✅ Completada</option>
-      <option value="aplazada">📅 Aplazada</option>
-    `;
+    const estados = [
+      { val: 'pendiente', txt: '⏳ Pendiente' },
+      { val: 'atrasada', txt: '🚨 Atrasada' },
+      { val: 'completada', txt: '✅ Completada' },
+      { val: 'aplazada', txt: '📅 Aplazada' }
+    ];
+    filtroEstado.innerHTML = estados.map(e => `
+      <label class="opcion-filtro">
+        <input type="checkbox" value="${e.val}" class="chk-estado"> ${e.txt}
+      </label>
+    `).join('');
   }
 
   // Filtro de Responsables
   if (filtroResponsable) {
-    filtroResponsable.multiple = true;
-    filtroResponsable.size = 3;
-    filtroResponsable.innerHTML = '';
-    responsablesUnicos.forEach(r =>{
-      filtroResponsable.innerHTML += `<option value="${r}">${r}</option>`;
-    });
+    filtroResponsable.innerHTML = responsablesUnicos.map(r => `
+      <label class="opcion-filtro">
+        <input type="checkbox" value="${r}" class="chk-responsable"> ${r}
+      </label>
+    `).join('');
   }
 
   // Filtro de Semanas
   if (filtroSemana) {
-    filtroSemana.multiple = true;
-    filtroSemana.size = 3;
-    filtroSemana.innerHTML = '';
-    semanasUnicas.forEach(s =>{
-      filtroSemana.innerHTML += `<option value="${s}">Semana ${s}</option>`;
-    });
+    filtroSemana.innerHTML = semanasUnicas.map(s => `
+      <label class="opcion-filtro">
+        <input type="checkbox" value="${s}" class="chk-semana"> Semana ${s}
+      </label>
+    `).join('');
   }
+
+  document.querySelectorAll('.contenido-dropdow input').forEach(chk => {
+    chk.addEventListener('change', aplicarFiltros);
+  });
 }
 
 function renderizarTabla(actividadesAFiltrar) {
@@ -141,8 +154,15 @@ function renderizarTabla(actividadesAFiltrar) {
       </select>
     </td>
     <td>
-        <input type="text" class="input-comentario" data-id="${actividad.id}" value="${actividad.comentarioDirector || ''}" placeholder="Añadir comentario...">
+      <textarea
+        class="input-comentario"
+        data-id="${actividad.id}"
+        placeholder="Añadir comentario..."
+        rows="2"
+        style="width: 100%; min-width: 140px; max-width: 220px; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: inherit; font-size: 13px; resize: vertical; box-sizing: border-box;"
+        >${actividad.comentarioDirector || ''}</textarea>
     </td>
+    <td>${actividad.avance}</td>
     `;
     cuerpoTabla.appendChild(fila);
   });
@@ -152,15 +172,16 @@ function renderizarTabla(actividadesAFiltrar) {
 
 
 function aplicarFiltros() {
-  const obtenerValoresSeleccionados = (selectElement) => {
-    if (!selectElement) return [];
-    return Array.from(selectElement.selectedOptions).map(option => option.value);
+  const obtenerValoresCheckboxes = (selector) => {
+    return Array.from(document.querySelectorAll(selector))
+                .filter(chk => chk.checked)
+                .map(chk => chk.value);
   };
 
-  const proyectosSeleccionados = obtenerValoresSeleccionados(filtroProyecto);
-  const estadosSeleccionados = obtenerValoresSeleccionados(filtroEstado);
-  const responsablesSeleccionados = obtenerValoresSeleccionados(filtroResponsable);
-  const semanasSeleccionadas = obtenerValoresSeleccionados(filtroSemana);
+  const proyectosSeleccionados = obtenerValoresCheckboxes('.chk-proyecto');
+  const estadosSeleccionados = obtenerValoresCheckboxes('.chk-estado');
+  const responsablesSeleccionados = obtenerValoresCheckboxes('.chk-responsable');
+  const semanasSeleccionadas = obtenerValoresCheckboxes('.chk-semana');
 
   const resultadoFiltrado = concentradoMinutas.filter((actividad) => {
     const cumpleProyecto = proyectosSeleccionados.length === 0 || proyectosSeleccionados.includes(actividad.proyecto);
@@ -175,20 +196,43 @@ function aplicarFiltros() {
   renderizarTabla(resultadoFiltrado);
 }
 
-function configurarFiltros() {
-  if (filtroProyecto) filtroProyecto.addEventListener('change', aplicarFiltros);
-  if (filtroEstado) filtroEstado.addEventListener('change', aplicarFiltros);
-  if (filtroResponsable) filtroResponsable.addEventListener('change', aplicarFiltros);
-  if (filtroSemana) filtroSemana.addEventListener('change', aplicarFiltros);
+// Maneja la apertura y cierre flotante de las cajas usando la clase .contenido-dropdow
+function configurarDropdowns() {
+  const dropdowns = document.querySelectorAll('.filtros');
+
+  dropdowns.forEach(dropdown => {
+    const boton = dropdown.querySelector('.btn-dropdown');
+    const contenido = dropdown.querySelector('.contenido-dropdow'); // Sin la n de tu HTML
+
+    if (boton && contenido) {
+      boton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        // Cerrar otros dropdowns abiertos
+        document.querySelectorAll('.contenido-dropdow').forEach(c => {
+          if (c !== contenido) c.classList.remove('mostrar');
+        });
+        
+        contenido.classList.toggle('mostrar');
+      });
+    }
+  });
+
+  // Cerrar al hacer clic fuera
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.contenido-dropdow').forEach(c => {
+      c.classList.remove('mostrar');
+    });
+  });
 }
 
 function asignarEventosInteractivos() {
-  document.querySelectorAll('.selector-estatus').forEach((select) => {
+  cuerpoTabla.querySelectorAll('.selector-estatus').forEach((select) => {
     select.addEventListener('change', async (e) => {
       const idActividad = e.target.getAttribute('data-id');
       const nuevoEstado = e.target.value;
 
-      const actividad = concentradoMinutas.find(item => item.id === idActividad);
+      const actividad = concentradoMinutas.find(item => String(item.id) === String(idActividad));
       if (actividad) {
         if (nuevoEstado === 'aplazada') {
           nuevaFechaEstado(actividad, e.target);
@@ -201,15 +245,16 @@ function asignarEventosInteractivos() {
     });
   });
 
-  document.querySelectorAll('.input-comentario').forEach((input) => {
-    input.addEventListener('blur', (e) => {
+  cuerpoTabla.querySelectorAll('.input-comentario').forEach((input) => {
+    input.addEventListener('blur', async (e) => {
       const idActividad = e.target.getAttribute('data-id');
       const nuevoComentario = e.target.value;
 
-      const actividad = concentradoMinutas.find(item => item.id === idActividad);
-      if (actividad) {
-        actividad.comentarioDirector = nuevoComentario;
-        guardarEnNubeUrgente(actividad);
+      const actividad = concentradoMinutas.find(item => String(item.id) === String(idActividad));
+
+      if (actividad && actividad.comentarioDirector !== nuevoComentario) {
+      actividad.comentarioDirector = nuevoComentario;
+      await guardarEnNubeUrgente(actividad);
       }
     });
   });
@@ -219,7 +264,7 @@ async function guardarEnNubeUrgente(actividadActualizada) {
   try {
     const url = 'https://modisa.onrender.com/api/minutas';
 
-    const indice = concentradoMinutas.findIndex(item => item.id === actividadActualizada.id);
+    const indice = concentradoMinutas.findIndex(item => String(item.id) === String(actividadActualizada.id));
     if (indice !== -1) {
       concentradoMinutas[indice] = {...actividadActualizada};
     }
@@ -229,6 +274,7 @@ async function guardarEnNubeUrgente(actividadActualizada) {
     const objetoFormateado = {
       id: actividadActualizada.id,
       proyecto: actividadActualizada.proyecto,
+      avance: actividadActualizada.avance || 0,
       responsable: actividadActualizada.responsable,
       semana: isNaN(numeroSemana) ? 1 : numeroSemana,
       fecha: actividadActualizada.fecha,
@@ -297,13 +343,19 @@ function MinutasPDF() {
 
   y += 22;
 
-  const fProyecto = filtroProyecto ? filtroProyecto.value : "todos";
-  const fsemana = filtroSemana ? filtroSemana.value : "todas";
+  const obtenerValoresCheckboxes = (selector) => {
+    return Array.from(document.querySelectorAll(selector))
+                .filter(chk => chk.checked)
+                .map(chk => chk.value);
+  };
 
-  const semFormateada = fsemana === "todas" ? "General" : fsemana;
-  const proyFormateado = fProyecto.charAt(0).toUpperCase() + fProyecto.slice(1);
-  const textoFiltros = `Filtros aplicados - Proyecto: ${proyFormateado} | Semana: ${semFormateada}`;
+  const proyectosSeleccionados = obtenerValoresCheckboxes('.chk-proyecto');
+  const semanasSeleccionadas = obtenerValoresCheckboxes('.chk-semana');
 
+  const proyFormateado = proyectosSeleccionados.length === 0 ? "Todos" : proyectosSeleccionados.join(', ');
+  const semFormateada = semanasSeleccionadas.length === 0 ? "Todas" : semanasSeleccionadas.map(s => `Semana ${s}`).join(', ');
+  
+  const textoFiltros = `Filtros aplicados - Proyecto: ${proyFormateado} | ${semFormateada}`;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(11);
   doc.setTextColor(71, 85, 105);
@@ -325,7 +377,7 @@ function MinutasPDF() {
   y+= 25;
 
   actividadesFiltradas.forEach((actividad, indice) => {
-    if (y > 740){
+    if (y > 720){
       doc.addPage();
       y = 60;
     }
@@ -343,7 +395,7 @@ function MinutasPDF() {
     const fechaFormateada = formatearFechaHTML(fechaLimpia);
     const textoEstatus = actividad.estado ? actividad.estado.toUpperCase() : 'PENDIENTE';
 
-    const metadatos = `Proyecto: ${actividad.proyecto} | Responsable: ${actividad.responsable} | Límite: ${fechaFormateada} | Estado: ${textoEstatus}`;
+    const metadatos = `Proyecto: ${actividad.proyecto} | Responsable: ${actividad.responsable} | Límite: ${fechaFormateada} | Estado: ${textoEstatus} | Avance: ${actividad.avance || 0}%`;
     doc.text(metadatos, margenIzquierdo + 65, y);
 
     y += 16;
@@ -352,7 +404,8 @@ function MinutasPDF() {
     doc.setFontSize(10);
     doc.setTextColor(100, 116, 139);
 
-    const descLineas = doc.splitTextToSize(`Descripción: ${actividad.descripcion || 'Sin descripción.'}`, 510);
+    const descTexto = String(actividad.descripcion || 'Sin descripción');
+    const descLineas = doc.splitTextToSize(`Descripción: ${descTexto}`, 510);
     doc.text(descLineas, margenIzquierdo, y);
     y += (descLineas.length * 13);
 
@@ -361,8 +414,9 @@ function MinutasPDF() {
       doc.setFontSize(9.5);
       doc.setTextColor(2, 132, 199);
 
-      const comentarioLineas = doc.splitTextToSize(`Comentario del director: ${actividad.comentarioDirector}`, 510);
-      doc.text(comentarioLineas, margenIzquierdo + 65, y);
+      const comentarioTexto = String(actividad.comentarioDirector);
+      const comentarioLineas = doc.splitTextToSize(`Comentario: ${comentarioTexto}`, 510);
+      doc.text(comentarioLineas, margenIzquierdo, y);
       y += (comentarioLineas.length * 13);
     }
 
@@ -375,18 +429,18 @@ function MinutasPDF() {
     y += 28;
   });
 
-  let nombreLimpio = (document.getElementById("filtroProyecto").value || 'General').trim();
+  const nombreProyectoBase = proyectosSeleccionados.length === 0 ? 'General' : proyectosSeleccionados.join('_');
   
-  nombreProyecto = nombreLimpio
+  const nombreProyectoLimpio = nombreProyectoBase
     .replace(/á/g, 'a')
     .replace(/é/g, 'e')
     .replace(/í/g, 'i')
     .replace(/ó/g, 'o')
     .replace(/ú/g, 'u')
-    .replace(/ñ/g, 'n');
+    .replace(/ñ/g, 'n')
+    .replace(/\s+/g, '_');
 
-  const nombreArchivo = `Reporte_Minutas_${nombreProyecto.replace(/\s+/g, '_')}.pdf`
-  nombreLimpio = nombreLimpio.replace(/ /g, 'i').replace(/i/g, 'I');
+  const nombreArchivo = `Reporte_Minutas_${nombreProyectoLimpio}.pdf`
   doc.save(nombreArchivo);
 }
 
