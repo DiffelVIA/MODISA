@@ -353,7 +353,7 @@ function MinutasPDF() {
   doc.text("Minutas Filtradas", margenIzquierdo, y);
 
   y += 15;
-/*
+
   const obtenerValoresCheckboxes = (selector) => {
     return Array.from(document.querySelectorAll(selector))
                 .filter(chk => chk.checked)
@@ -362,7 +362,7 @@ function MinutasPDF() {
 
   const proyectosSeleccionados = obtenerValoresCheckboxes('.chk-proyecto');
   const semanasSeleccionadas = obtenerValoresCheckboxes('.chk-semana');
-
+/*
   const proyFormateado = proyectosSeleccionados.length === 0 ? "Todos" : proyectosSeleccionados.join(', ');
   const semFormateada = semanasSeleccionadas.length === 0 ? "Todas" : semanasSeleccionadas.map(s => `Semana ${s}`).join(', ');
   
