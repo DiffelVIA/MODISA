@@ -11,7 +11,7 @@ async function cargarResponsablesDesdeNube() {
   if (!selectResponsable) return;
 
   try {
-    const respuesta = await fetch(  'https://modisa.onrender.com/api/employees');
+    const respuesta = await fetch(  'https://modisa.onrender.com/api/empleados');
     if (!respuesta.ok) throw new Error('Error al traer empleados');
 
     const empleados = await respuesta.json();
@@ -35,7 +35,7 @@ async function cargarProyectosDesdeNube() {
   if (!selectProyecto) return;
 
   try { 
-    const respuesta = await fetch('https://modisa.onrender.com/api/projects');
+    const respuesta = await fetch('https://modisa.onrender.com/api/proyectos');
     if (!respuesta.ok) throw new Error('Error al obtener los proyectos');
 
     const proyectos = await respuesta.json();
@@ -71,17 +71,21 @@ if (botonAgregar) {
 
   const fechaFormateada = new Date(fecha + 'T00:00:00');
   const semanaFiscalCalculada = obtenerNumeroSemana(fechaFormateada);
+  const inputAvance = document.getElementById('avance');
+  const comentario = document.getElementById('comentarioDirector');
+  const avanceValor = inputAvance ? parseFloat(inputAvance.value) || 0 : 0;
+  const comentarioValor = comentario ? comentario.value.trim() : '';
 
   const actividadNueva = {
     id: 'id_' + Math.random().toString(36).substr(2, 9),
     proyecto: proyecto,
-    titulo: actividad.substring(0, 50), 
     responsable: responsable,
     semana: semanaFiscalCalculada,
     fecha: fecha,
     descripcion: actividad,
     estado: 'pendiente',
-    comentarioDirector: ''
+    avance: avanceValor,
+    comentarioDirector: comentarioValor
   };
 
   actividadesAcumuladas.push(actividadNueva);
@@ -90,6 +94,7 @@ if (botonAgregar) {
   document.getElementById('actividad').value = '';
   document.getElementById('responsable').value = '';
   document.getElementById('fecha').value='';
+  document.getElementById('comentarioDirector').value = '';
   document.getElementById('actividad').focus();
   });
 }
@@ -105,17 +110,21 @@ document.querySelector('form').addEventListener('submit', function(event) {event
     if(actividadFlotante && responsableFlotante && proyectoFlotante && fechaFlotante) { // Si los campos flotantes no están vacíos
       const fechaFormateada = new Date(fechaFlotante + 'T00:00:00');
       const semanaFiscal = obtenerNumeroSemana(fechaFormateada);
+      const inputAvance = document.getElementById('avance');
+      const comentario = document.getElementById('comentarioDirector');
+      const avanceValor = inputAvance ? parseFloat(inputAvance.value) || 0 : 0;
+      const comentarioValor = comentario ? comentario.value.trim() : '';
 
       const ultimaActividad = {
         id:'id_' + Math.random().toString(36).substr(2,9),
         proyecto : proyectoFlotante,
-        titulo: actividadFlotante.substring(0,50),
         responsable : responsableFlotante,
         semana: semanaFiscal,
         fecha : fechaFlotante,
         descripcion: actividadFlotante,
         estado: 'pendiente',
-        comentarioDirector:''
+        avance: avanceValor,
+        comentarioDirector: comentarioValor
       };
       actividadesAcumuladas.push(ultimaActividad);
     }
@@ -186,7 +195,14 @@ function armarCuerpoPDF(doc, listaDeActividades) {
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
   doc.text("Resumen de Actividades Asignadas", 15, coordenadaY);
-  coordenadaY += 12;
+  coordenadaY += 8;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  const proyectoGeneral = listaDeActividades[0] ? listaDeActividades[0].proyecto : 'Sin Proyecto';
+  const avanceGeneral = listaDeActividades[0] ? listaDeActividades[0].avance : 0;
+  doc.text(`Proyecto: ${proyectoGeneral} | Avance: ${avanceGeneral}%`, 15, coordenadaY);
+  coordenadaY += 10;
 
   listaDeActividades.forEach(function(item, indice) {
     if (coordenadaY > 260) {
@@ -199,11 +215,15 @@ function armarCuerpoPDF(doc, listaDeActividades) {
     doc.text(`Actividad ${indice + 1}:`, 15, coordenadaY);
 
     doc.setFont("helvetica", "normal");
-    doc.text(`Proyecto: ${item.proyecto} | Responsable: ${item.responsable} | Límite: ${item.fecha}`, 42, coordenadaY);
+    doc.text(`Responsable: ${item.responsable} | Límite: ${item.fecha}`, 42, coordenadaY);
 
     coordenadaY +=6;
+    let textoCompleto = `Descripción: ${item.descripcion}`;
+    if (item.comentarioDirector && item.comentarioDirector.trim() !== "") {
+      textoCompleto += `\nComentario: ${item.comentarioDirector}`;
+    }
 
-    const textoAjustado = doc.splitTextToSize(`Descripción: ${item.descripcion}`,175); // posible error*-*-*-**-*-*-*-*-*-**-*-*-*-*-*
+    const textoAjustado = doc.splitTextToSize(textoCompleto ,175); 
     doc.text(textoAjustado,15,coordenadaY);
     coordenadaY += (textoAjustado.length * 5) + 10;
 
