@@ -4,7 +4,7 @@
     <meta charset="UTF-8"> <!-- este es el conjunto de caracteres utilizado -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--Sirve para -->
     <title>Control de Minutas</title>
-    <link rel="icon" type="image/x-icon" href="/img/MODISA-favicon.ico">
+    <link rel="icon" type="image/x-icon" href="img/MODISA-favicon.ico">
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -35,6 +35,11 @@
             </div>
 
             <div class="contenedor-formulario">
+                <label for="comentarioDirector">Comentario:</label>
+                <input type="text" id="comentarioDirector" name="comentarioDirector" placeholder="Escribe un comentario" required>
+            </div>
+
+            <div class="contenedor-formulario">
                 <label for="responsable">Responsable:</label>
                 <select name="responsable" id="responsable" required>
                     <option value="">-- Selecciona --</option>
@@ -53,6 +58,10 @@
                 <input type="date" name="fecha" id="fecha" required>
             </div>
 
+            <div class="contenedor-formulario">
+                <label for="avance">Avance:</label>
+                <input type="text" id="avance" name="avance" placeholder="% Avance" required>
+            </div>
             
             <div class="contenedor-botones">
                 <button type="button" id="agregar" class="btn">+ Agregar otra actividad</button>
