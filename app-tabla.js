@@ -120,8 +120,12 @@ function filtroOpciones(datos){
     `).join('');
   }
 
-  document.querySelectorAll('.contenido-dropdow input').forEach(chk => {
-    chk.addEventListener('change', aplicarFiltros);
+  const selectoresCheckBoxes = '.chk-proyecto, .chk-estado, .chk-responsable, .chk-semana';
+  document.querySelectorAll(selectoresCheckBoxes).forEach(chk => {
+    chk.addEventListener('change', () => {
+      console.log(`Filtro cambiado: ${chk.value} -> Estado actual: ${chk.checked}`);
+      aplicarFiltros();
+    });
   });
 }
 
