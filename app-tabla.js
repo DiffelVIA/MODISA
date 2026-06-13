@@ -352,8 +352,8 @@ function MinutasPDF() {
   doc.setTextColor(15, 23, 42);
   doc.text("Minutas Filtradas", margenIzquierdo, y);
 
-  y += 22;
-
+  y += 15;
+/*
   const obtenerValoresCheckboxes = (selector) => {
     return Array.from(document.querySelectorAll(selector))
                 .filter(chk => chk.checked)
@@ -373,6 +373,7 @@ function MinutasPDF() {
   doc.text(textoFiltros, margenIzquierdo, y);
 
   y += 15;
+*/
 
   doc.setDrawColor(226,232,240);
   doc.setLineWidth(1.5);
@@ -406,7 +407,7 @@ function MinutasPDF() {
     const fechaFormateada = formatearFechaHTML(fechaLimpia);
     const textoEstatus = actividad.estado ? actividad.estado.toUpperCase() : 'PENDIENTE';
 
-    const metadatos = `Proyecto: ${actividad.proyecto} | Responsable: ${actividad.responsable} | Límite: ${fechaFormateada} | Estado: ${textoEstatus} | Avance: ${actividad.avance || 0}%`;
+    const metadatos = `Proyecto: ${actividad.proyecto} | Responsable: ${actividad.responsable} | Límite: ${fechaFormateada} | Estado: ${textoEstatus}`;
     doc.text(metadatos, margenIzquierdo + 65, y);
 
     y += 16;
