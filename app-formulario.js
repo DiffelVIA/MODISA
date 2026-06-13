@@ -68,9 +68,8 @@ if (botonAgregar) {
     alert('Por favor, añade los campos antes de guardar la actividad');
     return;
   }
-
-  const fechaFormateada = new Date(fecha + 'T00:00:00');
-  const semanaFiscalCalculada = obtenerNumeroSemana(fechaFormateada);
+  
+  const semanaFiscalCalculada = obtenerNumeroSemana(new Date());
   const inputAvance = document.getElementById('avance');
   const comentario = document.getElementById('comentarioDirector');
   const avanceValor = inputAvance ? parseFloat(inputAvance.value) || 0 : 0;
@@ -107,9 +106,8 @@ document.querySelector('form').addEventListener('submit', function(event) {event
   const fechaFlotante = document.getElementById('fecha').value;
 
   if (actividadesAcumuladas.length === 0){
-    if(actividadFlotante && responsableFlotante && proyectoFlotante && fechaFlotante) { // Si los campos flotantes no están vacíos
-      const fechaFormateada = new Date(fechaFlotante + 'T00:00:00');
-      const semanaFiscal = obtenerNumeroSemana(fechaFormateada);
+    if(actividadFlotante && responsableFlotante && proyectoFlotante && fechaFlotante) {      
+      const semanaFiscal = obtenerNumeroSemana(new Date());
       const inputAvance = document.getElementById('avance');
       const comentario = document.getElementById('comentarioDirector');
       const avanceValor = inputAvance ? parseFloat(inputAvance.value) || 0 : 0;
@@ -153,27 +151,22 @@ function ejecutarGeneracionPDF(actividadesParaPDF) {
   const semanaFiscalCalculada = actividadesParaPDF[0].semana;
   const proyectoBase = actividadesParaPDF[0].proyecto;
   const proyectoSinEspacios = proyectoBase.replace(/ /g,'_');
-
-  const fechaHoy= new Date();
-  const primeraFechaAnio = new Date(fechaHoy.getFullYear(), 0, 1);
-  const diasPasados = Math.floor((fechaHoy - primeraFechaAnio) / (1000 * 60 * 60 * 24));
-  const semanaFiscalHoy = Math.ceil((diasPasados + primeraFechaAnio.getDay() + 1) / 7);
-
+  
   const rutaLogoLocal = 'img/logo-negro.png';
   const img = new Image();
-
+  
   function procesarEstructuraPDF() {
     doc.addImage(img, 'PNG', 15, 12, 40, 12);
     doc.setTextColor(6, 18, 30);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(14);
-    doc.text(`Minuta_${proyectoSinEspacios}_Semana:${semanaFiscalHoy}`, 75, 22);
+    doc.text(`Minuta_${proyectoSinEspacios}_Semana:${semanaFiscalCalculada}`, 75, 22);
     doc.setDrawColor(203,213,225);
     doc.setLineWidth(0.5);
     doc.line(15,38,195,38);
 
     armarCuerpoPDF(doc, actividadesParaPDF);
-    doc.save(`Minuta_${proyectoSinEspacios}_semana_${semanaFiscalHoy}.pdf`);
+    doc.save(`Minuta_${proyectoSinEspacios}_semana_${semanaFiscalCalculada}.pdf`);
   }
 
   img.onload = function() {
@@ -273,9 +266,10 @@ function configurarBotonGuardarAlterno(){
 }
 
 function obtenerNumeroSemana(fecha){
-  const d = new Date(Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()));
-  const dianNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dianNum);
-  const anioInicio = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  return Math.ceil((((d - anioInicio) / 86400000) + 1) / 7);
+  const d = new Date(fecha);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+  const añoInicio = new Date(d.getFullYear(), 0, 1);
+  const semana = Math.ceil((((d - añoInicio) / 86400000) + 1) / 7);
+  return semana;
 }
