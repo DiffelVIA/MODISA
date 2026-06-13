@@ -147,66 +147,85 @@ header nav ul li a:hover{ /* Selección para el estado hover (cuando el cursor e
   background-color: var(--accent-color);
 }
 
+
+/*////////////// Filtro //////////////////*/
+
 .contenedorFiltros{
-  display: flex; /* Activa el modelo de diseño flexible para el contenedor de filtros */
-  flex-direction: row; /* Coloca los filtros en una fila, uno al lado del otro */
-  gap: 20px; /* Espacio de 20px entre los filtros */
-  flex-wrap: wrap; /* Permite que los filtros se ajusten a la siguiente línea si no caben en una sola fila */
-  margin-bottom: 30px; /* Agrega un margen inferior para separar los filtros del contenido siguiente */
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  font-family: var(--font-main);
+  flex-wrap: wrap;
 }
 
 .filtros{
-  margin-bottom: 5px; /* Agrega un margen inferior para separar los filtros del contenido siguiente */
-  display: flex; /* Activa el modelo de diseño flexible para los contenedores de filtro */
-  flex-direction: column; /* Coloca los elementos del filtro en columna, uno debajo de otro */
-  gap: 5px; /* Espacio de 5px entre los elementos del filtro */
-  width: auto; /* Permite que los contenedores de filtro ocupen solo el ancho necesario para su contenido */
-  max-width: 300px; /* Limita el ancho máximo de los contenedores de filtro para evitar que sean demasiado anchos en pantallas grandes */
-  min-width: 200px; /* Establece un ancho mínimo para los contenedores de filtro para asegurar que sean lo suficientemente grandes para su contenido */
+  position: relative;
+  display: inline-block;
 }
 
-.filtros label { /* Selecciona las etiquetas dentro de los contenedores de filtro para aplicar estilos */
-  font-size: 13px; /* Define un tamaño de fuente pequeño para las etiquetas de los filtros */
-  font-weight: bold; /* Hace que el texto de las etiquetas de los filtros sea negrita para destacarlas */
-  color: var(--text-muted); /* Color gris oscuro para las etiquetas */
-}
-
-.filtros select { /* Selecciona los elementos de selección dentro de los contenedores de filtro para aplicar estilos */
-  padding: 8px 12px; /* Agrega un relleno interno de 8px arriba y abajo, 12px a los lados para los campos de selección */
-  border: 1px solid var(--border-color); /* Agrega un borde gris claro a los campos de selección */
-  border-radius: 6px; /* Redondea ligeramente las esquinas de los campos de selección */
-  background-color: var(--bg-light); /* Pone un fondo blanco a los campos de selección para mejorar la visibilidad */
-  color: var(--dark-text); /* Color gris oscuro para el texto de los campos de selección */
-  font-size: 13px; /* Define un tamaño de fuente pequeño para los campos de selección */
-  cursor: pointer; /* Cambia el cursor a un puntero al pasar sobre los campos de selección para indicar que son interactivos */
-  outline: none; /* Elimina el contorno predeterminado al enfocar los campos de selección */
-  transition: border-color 0.2s; /* Suaviza el cambio de color del borde al interactuar con los campos de selección */
-}
-
-.filtros select:focus { /* Selecciona los campos de selección cuando están enfocados para aplicar estilos */
-  border-color: var(--accent-color); /* Destello azul al seleccionar */
-}
-
-/* Estilos exclusivos para cuando el select tiene la propiedad multiple activa */
-.filtros select[multiple] {
-  height: auto;          /* Quita cualquier restricción de altura */
-  min-height: 100px;     /* Le da una altura fija cómoda para ver varias opciones */
-  padding: 6px;          /* Ajusta el relleno interno */
-  background-image: none;/* Elimina la flechita clásica de despliegue */
-  overflow-y: auto;      /* Agrega una barra de desplazamiento interna si hay muchas opciones */
-}
-
-/* Estilo para mejorar cómo se ven las opciones adentro en Mac y Windows */
-.filtros select[multiple] option {
-  padding: 6px 10px;
+.btn-dropdown{
+  background-color: #ffffff;
+  color: var(--text-dark);
+  padding: 8px 16px;
+  font-size: 13px;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
-  margin-bottom: 2px;
+  cursor: pointer;
+  min-width: 165px;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
 }
 
-/* Cambia el color cuando pasas el mouse por encima de una opción */
-.filtros select[multiple] option:hover {
-  background-color: rgba(2, 132, 199, 0.1);
+.btn-dropdown:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--text-muted);
 }
+
+.contenido-dropdown {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 200px;
+  max-height: 240px;
+  overflow-y: auto;
+  box-shadow: 0px 8px 16px rgba(6, 18, 30, 0.1);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  z-index: 100;
+  padding: 6px;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+
+.contenido-dropdown.mostrar {
+  display: block;
+}
+
+.opcion-filtro {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  font-size: 13px;
+  color: var(--text-dark);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.opcion-filtro:hover {
+  background-color: var(--bg-hover);
+}
+
+.opcion-filtro input {
+  margin-right: 8px;
+  cursor: pointer;
+  accent-color: var(--accent-color); /* Los cuadros de verificación usarán tu azul de énfasis */
+}
+
+/*///////////// Tabla //////////////////*/
 
 .main-tabla{ /* Selecciona el elemento <main> con la clase "main-tabla" para el contenido principal de la página de minutas */
   margin: 40px auto; /* Centra el contenido principal horizontalmente y agrega un margen vertical de 40px */
@@ -299,4 +318,61 @@ footer{
 
 footer p{ /* Selecciona los párrafos dentro del footer */
  margin: 0; /* Elimina el margen exterior de los párrafos */
+}
+
+@media (max-width: 767px) {
+  /* 1. Evita que el Header se desborde reduciendo el padding lateral fijo */
+  header {
+    padding: 15px 20px !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 2. Hace que el Logo sea flexible y no rompa pantallas muy angostas */
+  header img {
+    height: auto !important;
+    max-width: 220px; /* Limita el ancho del logo en celulares */
+    width: 100% !important;
+  }
+
+  /* 3. Ajusta los botones de navegación en móvil para que no se amontonen */
+  header nav ul {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* 4. Asegura que el contenedor de filtros no estire la pantalla */
+  .contenedorFiltros {
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .filtros {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  .btn-dropdown {
+    width: 100%;
+  }
+
+  .contenido-dropdown {
+    width: 100%;
+  }
+
+  /* 5. Corrige el Footer para que sea 100% amigable en móviles */
+  footer {
+    padding: 20px 15px !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .contenedor-tabla {
+    width: 100%;
+    overflow-x: auto; /* Esto creará una barra de desplazamiento horizontal solo para la tabla, manteniendo el resto de la app fija en su lugar */
+  }
+
 }
