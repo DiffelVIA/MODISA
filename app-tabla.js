@@ -131,14 +131,6 @@ function filtroOpciones(datos){
       </label>
     `).join('');
   }
-
-  const selectoresCheckBoxes = '.chk-proyecto, .chk-estado, .chk-responsable, .chk-semana';
-  document.querySelectorAll(selectoresCheckBoxes).forEach(chk => {
-    chk.addEventListener('change', () => {
-      console.log(`Filtro cambiado: ${chk.value} -> Estado actual: ${chk.checked}`);
-      aplicarFiltros();
-    });
-  });
 }
 
 function renderizarTabla(actividadesAFiltrar) {
@@ -212,13 +204,12 @@ function aplicarFiltros() {
   renderizarTabla(resultadoFiltrado);
 }
 
-// Maneja la apertura y cierre flotante de las cajas usando la clase .contenido-dropdow
 function configurarDropdowns() {
   const dropdowns = document.querySelectorAll('.filtros');
 
   dropdowns.forEach(dropdown => {
     const boton = dropdown.querySelector('.btn-dropdown');
-    const contenido = dropdown.querySelector('.contenido-dropdow'); // Sin la n de tu HTML
+    const contenido = dropdown.querySelector('.contenido-dropdown');
 
     if (boton && contenido) {
       boton.addEventListener('click', (e) => {
