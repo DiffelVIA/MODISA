@@ -209,14 +209,14 @@ function configurarDropdowns() {
 
   dropdowns.forEach(dropdown => {
     const boton = dropdown.querySelector('.btn-dropdown');
-    const contenido = dropdown.querySelector('.contenido-dropdown');
+    const contenido = dropdown.querySelector('[class*="contenido-drop"]');
 
     if (boton && contenido) {
       boton.addEventListener('click', (e) => {
         e.stopPropagation();
         
         // Cerrar otros dropdowns abiertos
-        document.querySelectorAll('.contenido-dropdown').forEach(c => {
+        document.querySelectorAll('[class*="contenido-drop"]').forEach(c => {
           if (c !== contenido) c.classList.remove('mostrar');
         });
         
@@ -231,7 +231,7 @@ function configurarDropdowns() {
 
   // Cerrar al hacer clic fuera
   document.addEventListener('click', () => {
-    document.querySelectorAll('.contenido-dropdown').forEach(c => {
+    document.querySelectorAll('[class*="contenido-drop"]').forEach(c => {
       c.classList.remove('mostrar');
     });
   });
