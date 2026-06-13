@@ -62,12 +62,13 @@ app.post('/api/minutas', async (req, res) => {
 
   try {
     const query = `
-    INSERT INTO minutas (id, proyecto, responsable, semana, fecha, descripcion, estado, comentarioDirector)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO minutas (id, proyecto, avance, responsable, semana, fecha, descripcion, estado, comentarioDirector)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE
       estado = values(estado),
       comentarioDirector = values(comentarioDirector),
       proyecto = values(proyecto),
+      avance = values(avance),
       responsable = values(responsable),
       fecha = values(fecha),
       semana = values(semana),
@@ -76,6 +77,7 @@ app.post('/api/minutas', async (req, res) => {
 
     const promesas = listaMinutas.map(item => {
       const comentario = item.comentariodirector || item.comentarioDirector || '';
+      const avanceInsertar = item.avance !== undefined && item.avance !== null ? Number(item.avance) : 0;
 
       const fechaLimpia = item.fecha ? item.fecha.split('T')[0] : new Date().toISOString().split('T')[0];
       
@@ -94,6 +96,7 @@ app.post('/api/minutas', async (req, res) => {
       return pool.query(query, [
         item.id,
         item.proyecto,
+        avanceInsertar,
         item.responsable,
         semanaAInsertar,
         fechaLimpia,
