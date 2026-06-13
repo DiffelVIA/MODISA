@@ -20,6 +20,18 @@ document.addEventListener('DOMContentLoaded', () => {
   cargarActividades();
   configurarDropdowns();
 
+  document.addEventListener('change', (e) => {
+    if (
+      e.target.classList.contains('chk-proyecto') ||
+      e.target.classList.contains('chk-estado') ||
+      e.target.classList.contains('chk-responsable') ||
+      e.target.classList.contains('chk-semana')
+    ){
+      console.log(`Filtro cambiado: ${e.target.value} -> Estado actual: ${e.target.checked}`);
+      aplicarFiltros();
+    }
+  });
+
   const btnDescargar = document.getElementById("descargar");
   if (btnDescargar) {
     btnDescargar.addEventListener('click', MinutasPDF);
@@ -213,18 +225,22 @@ function configurarDropdowns() {
         e.stopPropagation();
         
         // Cerrar otros dropdowns abiertos
-        document.querySelectorAll('.contenido-dropdow').forEach(c => {
+        document.querySelectorAll('.contenido-dropdown').forEach(c => {
           if (c !== contenido) c.classList.remove('mostrar');
         });
         
         contenido.classList.toggle('mostrar');
       });
+
+      contenido.addEventListener('click', (e) => {
+        e.stopPropagation();
+     });
     }
   });
 
   // Cerrar al hacer clic fuera
   document.addEventListener('click', () => {
-    document.querySelectorAll('.contenido-dropdow').forEach(c => {
+    document.querySelectorAll('.contenido-dropdown').forEach(c => {
       c.classList.remove('mostrar');
     });
   });
