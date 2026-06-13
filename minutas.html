@@ -28,38 +28,30 @@
     <h1>Minutas Registradas</h1>
 
     <div class="contenedorFiltros">
-      <div class="filtros">
-        <label for="filtroProyecto">Filtrar por proyecto:</label>
-        <select id="filtroProyecto">
-          <option value="">Todos los proyectos</option>
-        </select>
+
+      <div class="filtros" id="dropdownProyecto">
+        <button type="button" class="btn-dropdown">Filtro Proyecto ▾</button>
+        <div class="contenido-dropdown" id="filtroProyecto">
+        </div>
       </div>
 
-      <div class="filtros">
-        <label for="filtroEstado">Filtrar por estado:</label>
-        <select id="filtroEstado">
-          <option value="">Todos los estados</option>
-          <option value="pendiente">Pendiente</option>
-          <option value="atrasada">Atrasada</option>
-          <option value="completada">Completada</option>
-          <option value="aplazada">Aplazada</option>
-        </select>
+      <div class="filtros" id="dropdownEstado">
+        <button type="button" class="btn-dropdown">Filtro Estado ▾</button>
+        <div class="contenido-dropdown" id="filtroEstado">
+        </div>
       </div>
 
-      <div class="filtros">
-        <label for="filtroResponsable">Filtrar por responsable:</label>
-        <select id="filtroResponsable">
-          <option value="">Todos los responsables</option>
-        </select>
+      <div class="filtros" id="dropdownResponsable">
+        <button type="button" class="btn-dropdown">Filtro Responsable ▾</button>
+        <div class="contenido-dropdown" id="filtroResponsable">
+        </div>
       </div>
 
-      <div class="filtros">
-        <label for="filtroSemana">Filtrar por semana:</label>
-        <select id="filtroSemana">
-          <option value="">Todas las semanas</option>
-        </select>
+      <div class="filtros" id="dropdownSemana">
+        <button type="button" class="btn-dropdown">Filtro Semana ▾</button>
+        <div class="contenido-dropdown" id="filtroSemana">
+        </div>
       </div>
-    </div>
 
     <div class="contenedor-accion">
       <button type="button" id="descargar" class="btn">Descargar</button>
@@ -77,6 +69,7 @@
             <th>Descripción</th>
             <th>Estado</th>
             <th>Comentario</th>
+            <th>Avance</th>
           </tr>
         </thead>
 
